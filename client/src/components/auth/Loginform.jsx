@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 
 const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net'
 
+
+
 export default function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,14 +20,13 @@ export default function LoginForm({ onLoginSuccess }) {
     e.preventDefault();
     
     try {
-      console.log('Attempting login to:', `${API_URL}/api/login/`);
+      console.log('Attempting login to:', `${API_URL}/api/login`);
       const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        credentials: 'include',  // Important for CORS with credentials
         mode: 'cors',           // Explicitly state CORS mode
         body: JSON.stringify({
           email,
@@ -63,7 +64,7 @@ export default function LoginForm({ onLoginSuccess }) {
     };
   
     try {
-      console.log('Attempting registration to:', `${API_URL}/api/register/`);
+      console.log('Attempting registration to:', `${API_URL}/api/register`);
       console.log('Registration data:', formData);
       const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
@@ -71,7 +72,6 @@ export default function LoginForm({ onLoginSuccess }) {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        credentials: 'include',  // Important for CORS with credentials
         mode: 'cors',           // Explicitly state CORS mode
         body: JSON.stringify(formData),
       });
