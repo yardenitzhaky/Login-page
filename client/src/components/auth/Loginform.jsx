@@ -131,7 +131,7 @@ export default function LoginForm({ onLoginSuccess }) {
   
           {/* Social auth buttons */}
           <div className="mt-4">
-            <SocialAuth />
+            <SocialAuth onLoginSuccess={onLoginSuccess} />
           </div>
   
           {/* "Have no account yet?" above register button */}
