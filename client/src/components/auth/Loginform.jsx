@@ -4,6 +4,7 @@ import Button from '../shared/Button'
 import SocialAuth from './SocialAuth'
 import { toast } from 'react-toastify';
 
+const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net'
 
 export default function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState('')
@@ -17,18 +18,23 @@ export default function LoginForm({ onLoginSuccess }) {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5001/api/login', {
+      console.log('Attempting login to:', `${API_URL}/api/login/`);
+      const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
+        credentials: 'include',  // Important for CORS with credentials
+        mode: 'cors',           // Explicitly state CORS mode
         body: JSON.stringify({
           email,
           password
         }),
       });
-
+  
       const data = await response.json();
+      console.log('Login response:', data);
       
       if (response.ok) {
         onLoginSuccess(data.user);  
@@ -37,7 +43,7 @@ export default function LoginForm({ onLoginSuccess }) {
         toast.error(data.error || 'Login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error details:', error);
       toast.error('Login failed. Please try again.');
     }
   };
@@ -50,35 +56,39 @@ export default function LoginForm({ onLoginSuccess }) {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     
-    // Create formData object with the registration data
     const formData = {
-      username: regEmail.split('@')[0], // Creating username from email
+      username: regEmail.split('@')[0],
       email: regEmail,
       password: regPassword
     };
-
+  
     try {
-      // After successful registration
-      const response = await fetch('http://localhost:5001/api/register', {
+      console.log('Attempting registration to:', `${API_URL}/api/register/`);
+      console.log('Registration data:', formData);
+      const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
+        credentials: 'include',  // Important for CORS with credentials
+        mode: 'cors',           // Explicitly state CORS mode
         body: JSON.stringify(formData),
       });
-
+  
       const data = await response.json();
+      console.log('Registration response:', data);
+      
       if (response.ok) {
-        // Show toast with welcome message
         toast.success(data.welcomeMessage || 'Registration successful!');
-        setShowRegister(false); // Hide registration form
-        setRegEmail(''); // Clear form
+        setShowRegister(false);
+        setRegEmail('');
         setRegPassword('');
       } else {
         toast.error(data.error || 'Registration failed');
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error details:', error);
       toast.error('Registration failed. Please try again.');
     }
   };
