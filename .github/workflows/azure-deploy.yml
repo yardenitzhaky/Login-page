@@ -1,0 +1,41 @@
+name: Build and deploy Python app to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'  # Only trigger when server directory changes
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: server  # Set the working directory to server
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python version
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.10'
+
+    - name: Create and start virtual environment
+      run: |
+        python -m venv venv
+        source venv/bin/startup.sh
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'YOUR-APP-NAME'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE }}
+        package: server  # Specify the server directory to deploy
