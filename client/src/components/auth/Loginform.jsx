@@ -5,7 +5,7 @@ import SocialAuth from './SocialAuth'
 import { toast } from 'react-toastify';
 
 
-export default function LoginForm() {
+export default function LoginForm({ onLoginSuccess }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -13,10 +13,34 @@ export default function LoginForm() {
   const [regPassword, setRegPassword] = useState('')
   const [showRegister, setShowRegister] = useState(false)
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault()
-    console.log("Logging in with:", email, password)
-  }
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('http://localhost:5001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        onLoginSuccess(data.user);  
+        toast.success('Login successful!');
+      } else {
+        toast.error(data.error || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('Login failed. Please try again.');
+    }
+  };
 
   const handleRegisterClick = () => {
     setShowRegister(true)
