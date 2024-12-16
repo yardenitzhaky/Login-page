@@ -10,6 +10,8 @@ from werkzeug.security import generate_password_hash
 import re
 from werkzeug.security import check_password_hash
 
+NODEJS_SERVER_URL = os.getenv('NODEJS_SERVER_URL', 'http://localhost:3001')
+
 
 # Load environment variabless
 load_dotenv()
@@ -113,8 +115,12 @@ def register():
         
         # Get welcome message from Node.js server
         try:
-            openai_response = requests.get('http://localhost:3001/api/welcome-message')
-            welcome_message = openai_response.json()['message']
+            openai_response = requests.get(f'{NODEJS_SERVER_URL}/api/welcome-message', timeout=5)
+            if openai_response.status_code == 200:
+                welcome_message = openai_response.json()['message']
+            else:
+                welcome_message = "Welcome to our platform!"
+                print(f"Error getting welcome message. Status code: {openai_response.status_code}")
         except Exception as e:
             welcome_message = "Welcome to our platform!"
             print(f"Error getting welcome message: {str(e)}")
