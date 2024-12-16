@@ -15,6 +15,10 @@ function App() {
     }
   };
 
+  const handleBack = () => {
+    setLoggedInUser(null);
+  };
+
   return (
     <div className="bg-[#5B5FED] text-[#333333] h-screen w-screen flex items-center justify-center">
       <Card>
@@ -24,7 +28,10 @@ function App() {
           </div>
           <div className="w-2/5 p-6 flex flex-col justify-center overflow-auto">
             {loggedInUser ? (
-              <LoginSuccess username={loggedInUser.username} />
+              <LoginSuccess 
+                username={loggedInUser.username} 
+                onBack={handleBack}
+              />
             ) : (
               <LoginForm onLoginSuccess={handleLoginSuccess} />
             )}

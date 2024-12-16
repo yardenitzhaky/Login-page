@@ -1,7 +1,8 @@
 import React from 'react';
 import { PartyPopper } from 'lucide-react';
+import Button from '../shared/Button';
 
-export default function LoginSuccess({ username }) {
+export default function LoginSuccess({ username, onBack }) {
   return (
     <div className="flex flex-col items-center justify-center space-y-6 p-8 text-center">
       <PartyPopper size={64} className="text-green-500" />
@@ -11,6 +12,13 @@ export default function LoginSuccess({ username }) {
       <p className="text-xl text-gray-600">
         You have successfully logged in.
       </p>
+      <Button 
+        variant="secondary"
+        className="mt-6"
+        onClick={onBack}
+      >
+        Back to Login
+      </Button>
     </div>
   );
 }

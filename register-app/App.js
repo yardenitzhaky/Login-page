@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
+import SuccessScreen from './SuccessScreen';
 
 // Create a stack navigator
 const Stack = createNativeStackNavigator();
@@ -20,6 +21,7 @@ export default function App() {
       >
         {/* Define the screens in the stack navigator */}
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Success" component={SuccessScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
