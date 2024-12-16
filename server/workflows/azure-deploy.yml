@@ -12,10 +12,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
-    defaults:
-      run:
-        working-directory: server  # Set the working directory to server
-
     steps:
     - uses: actions/checkout@v2
 
@@ -26,16 +22,25 @@ jobs:
 
     - name: Create and start virtual environment
       run: |
+        cd server
         python -m venv venv
-        source venv/bin/startup.sh
+        source venv/bin/activate
 
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: |
+        cd server
+        pip install -r requirements.txt
+        
+    - name: Create startup command file
+      run: |
+        cd server
+        echo "gunicorn --bind=0.0.0.0 --timeout 600 app:app" > startup.sh
+        chmod +x startup.sh
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'YOUR-APP-NAME'
+        app-name: 'register'
         slot-name: 'production'
         publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE }}
-        package: server  # Specify the server directory to deploy
+        package: './server'  # Specify the server directory for deployment
