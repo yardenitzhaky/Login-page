@@ -11,7 +11,7 @@ import re
 from werkzeug.security import check_password_hash
 
 
-# Load environment variables
+# Load environment variabless
 load_dotenv()
 
 # MongoDB configuration
