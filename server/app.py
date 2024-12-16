@@ -20,7 +20,13 @@ DB_NAME = os.getenv('DB_NAME', 'registration_db')
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["*"],  # In production, replace with your frontend domain
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Initialize MongoDB connection
 try:
