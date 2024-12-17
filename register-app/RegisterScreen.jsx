@@ -13,6 +13,9 @@ import {
 import Toast from 'react-native-root-toast';
 import { Ionicons } from '@expo/vector-icons';
 
+const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net';
+
+
 const RegisterScreen = ({ navigation }) => {
   // State for form data (username, email, password)
   const [formData, setFormData] = useState({
@@ -92,7 +95,7 @@ const RegisterScreen = ({ navigation }) => {
       setLoading(true); // Show loading indicator
 
       // Send registration data to the server
-      const response = await fetch('http://192.168.10.21:5001/api/register', {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

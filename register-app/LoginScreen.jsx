@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net';
+
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
     
     setIsLoading(true);
     try {
-      const response = await fetch('http://192.168.10.21:5001/api/login', {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
