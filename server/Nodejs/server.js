@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || process.env.WEBSITES_PORT || 8080;
 
-// Initialize OpenAI with error handling.
+// Initialize OpenAI with error handling......
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
