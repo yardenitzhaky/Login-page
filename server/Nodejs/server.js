@@ -9,10 +9,10 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Initialize OpenAI instance immediately
-const openai = process.env.OPENAI_API_KEY ? new OpenAI({
+// Initialize OpenAI with error handling
+const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
-}) : null;
+  });
 
 // Simple health check that responds immediately
 app.get('/health', (req, res) => {
