@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'server/**'
-      - '!server/nodejs/**'  # This excludes the nodejs directory
   workflow_dispatch:
 
 jobs:
