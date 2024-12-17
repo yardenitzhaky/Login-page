@@ -1,13 +1,22 @@
-import React from 'react'
+import React from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
-export default function Button({ variant = 'primary', className = '', disabled, ...props }) {
+export default function Button({ 
+  variant = 'primary', 
+  className = '', 
+  disabled,
+  isLoading,
+  children,
+  ...props 
+}) {
   let baseClasses = `
     inline-flex items-center justify-center
     rounded-full font-medium transition-colors
     focus:outline-none focus:ring-2 focus:ring-offset-2
     w-[185px] h-[40px]
-  `
-  let variantClasses = ''
+  `;
+  
+  let variantClasses = '';
 
   switch (variant) {
     case 'primary':
@@ -16,31 +25,38 @@ export default function Button({ variant = 'primary', className = '', disabled, 
         hover:bg-[#4A4FD5]
         focus:ring-[#5B5FED]
         disabled:opacity-50 disabled:cursor-not-allowed
-      `
-      break
+      `;
+      break;
     case 'secondary':
       variantClasses = `
         bg-gray-200 text-gray-800
         hover:bg-gray-300
         focus:ring-gray-200
         disabled:opacity-50 disabled:cursor-not-allowed
-      `
-      break
+      `;
+      break;
     case 'text':
       variantClasses = `
         bg-transparent text-[#5B5FED] hover:underline focus:ring-transparent
         disabled:opacity-50 disabled:cursor-not-allowed
-      `
-      break
+      `;
+      break;
     default:
-      variantClasses = ''
+      variantClasses = '';
   }
 
   return (
     <button
       className={`${baseClasses} ${variantClasses} ${className}`}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       {...props}
-    />
-  )
+    >
+      {isLoading ? (
+        <div className="flex items-center justify-center space-x-2">
+          <LoadingSpinner size="small" className="text-current" />
+          <span>Loading...</span>
+        </div>
+      ) : children}
+    </button>
+  );
 }

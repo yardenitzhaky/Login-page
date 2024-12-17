@@ -1,23 +1,24 @@
-import React, { useState } from 'react'
-import Input from '../shared/Input'
-import Button from '../shared/Button'
-import SocialAuth from './SocialAuth'
+import React, { useState } from 'react';
+import Input from '../shared/Input';
+import Button from '../shared/Button';
+import SocialAuth from './SocialAuth';
 import { toast } from 'react-toastify';
+import LoadingSpinner from '../shared/LoadingSpinner';
 
-const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net'
-
-
+const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsites.net';
 
 export default function LoginForm({ onLoginSuccess }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  const [regEmail, setRegEmail] = useState('')
-  const [regPassword, setRegPassword] = useState('')
-  const [showRegister, setShowRegister] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [showRegister, setShowRegister] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     
     try {
       console.log('Attempting login to:', `${API_URL}/api/login`);
@@ -27,7 +28,7 @@ export default function LoginForm({ onLoginSuccess }) {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        mode: 'cors',           // Explicitly state CORS mode
+        mode: 'cors',
         body: JSON.stringify({
           email,
           password
@@ -46,16 +47,18 @@ export default function LoginForm({ onLoginSuccess }) {
     } catch (error) {
       console.error('Login error details:', error);
       toast.error('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleRegisterClick = () => {
-    setShowRegister(true)
-    
-  }
+    setShowRegister(true);
+  };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    setIsRegistering(true);
     
     const formData = {
       username: regEmail.split('@')[0],
@@ -72,7 +75,7 @@ export default function LoginForm({ onLoginSuccess }) {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        mode: 'cors',           // Explicitly state CORS mode
+        mode: 'cors',
         body: JSON.stringify(formData),
       });
   
@@ -90,6 +93,8 @@ export default function LoginForm({ onLoginSuccess }) {
     } catch (error) {
       console.error('Registration error details:', error);
       toast.error('Registration failed. Please try again.');
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -98,8 +103,7 @@ export default function LoginForm({ onLoginSuccess }) {
       {!showRegister ? (
         // Login Form
         <form onSubmit={handleLoginSubmit} className="flex flex-col space-y-4 items-center w-full">
-          {/* Login Fields */}
-          <div className='w-full relative'>
+          <div className="w-full relative">
             <Input
               type="email"
               label="Email"
@@ -107,6 +111,7 @@ export default function LoginForm({ onLoginSuccess }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               icon="mail"
+              disabled={isLoading}
             />
           </div>
           <div className="w-full relative">
@@ -117,8 +122,8 @@ export default function LoginForm({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               icon="lock"
+              disabled={isLoading}
             />
-            {/* Forgot password? to the right under the password field */}
             <div className="flex justify-end mt-1">
               <a
                 href="#forgot-password"
@@ -129,29 +134,39 @@ export default function LoginForm({ onLoginSuccess }) {
             </div>
           </div>
   
-          {/* Log in button */}
-          <Button type="submit" className="mt-2">Log in</Button>
+          <Button 
+            type="submit" 
+            className="mt-2"
+            isLoading={isLoading}
+            disabled={isLoading || !email || !password}
+          >
+            Log in
+          </Button>
   
-          {/* OR divider with lines */}
           <div className="relative flex items-center w-full mt-4">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="mx-2 text-gray-500">Or</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
   
-          {/* Social auth buttons */}
           <div className="mt-4">
-            <SocialAuth onLoginSuccess={onLoginSuccess} />
+            <SocialAuth 
+              onLoginSuccess={onLoginSuccess}
+              disabled={isLoading}
+            />
           </div>
   
-          {/* "Have no account yet?" above register button */}
           <div className="mt-4 text-sm text-center text-gray-500">
             Have no account yet?
           </div>
   
           <div className="mt-2">
-            {/* Match the social auth styling by using variant="secondary" */}
-            <Button variant="secondary" className="py-3 text-lg" onClick={handleRegisterClick}>
+            <Button 
+              variant="secondary" 
+              className="py-3 text-lg" 
+              onClick={handleRegisterClick}
+              disabled={isLoading}
+            >
               Register
             </Button>
           </div>
@@ -159,8 +174,7 @@ export default function LoginForm({ onLoginSuccess }) {
       ) : (
         // Registration Form
         <form onSubmit={handleRegisterSubmit} className="flex flex-col space-y-4 items-center w-full">
-          {/* Registration Fields */}
-          <div className='w-full relative'>
+          <div className="w-full relative">
             <Input
               type="email"
               label="Registration Email"
@@ -168,9 +182,10 @@ export default function LoginForm({ onLoginSuccess }) {
               value={regEmail}
               onChange={(e) => setRegEmail(e.target.value)}
               icon="mail"
+              disabled={isRegistering}
             />
           </div>
-          <div className='w-full relative'>
+          <div className="w-full relative">
             <Input
               type="password"
               label="Registration Password"
@@ -178,22 +193,29 @@ export default function LoginForm({ onLoginSuccess }) {
               value={regPassword}
               onChange={(e) => setRegPassword(e.target.value)}
               icon="lock"
+              disabled={isRegistering}
             />
           </div>
-          <Button variant="secondary" type="submit" className="py-3 text-lg">
+          <Button 
+            variant="secondary" 
+            type="submit" 
+            className="py-3 text-lg"
+            isLoading={isRegistering}
+            disabled={isRegistering || !regEmail || !regPassword}
+          >
             Submit
           </Button>
   
-          {/* Back to Login Button */}
           <Button 
             variant="text" 
             className="mt-2"
             onClick={() => setShowRegister(false)}
+            disabled={isRegistering}
           >
             Back to Login
           </Button>
         </form>
       )}
     </div>
-  )
+  );
 }
