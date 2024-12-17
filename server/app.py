@@ -6,15 +6,19 @@ import os
 import requests
 from dotenv import load_dotenv
 from pymongo import MongoClient
-from werkzeug.security import generate_password_hash
-import re
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from urllib.parse import urlparse
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
-NODEJS_SERVER_URL = os.getenv('NODEJS_SERVER_URL', 'http://localhost:3001')
-
-
-# Load environment variabless
+# Load environment variables
 load_dotenv()
+
+# Server configuration
+NODEJS_SERVER_URL = os.getenv('NODEJS_SERVER_URL', 'https://chatgpt-server-a3cydtahb0habmbg.israelcentral-01.azurewebsites.net')
+# Ensure URL has scheme
+if not urlparse(NODEJS_SERVER_URL).scheme:
+    NODEJS_SERVER_URL = f'https://{NODEJS_SERVER_URL}'
 
 # MongoDB configuration
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
@@ -23,6 +27,15 @@ DB_NAME = os.getenv('DB_NAME', 'registration_db')
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
+
+# Configure requests session with retry logic
+session = requests.Session()
+retry_strategy = Retry(
+    total=3,
+    backoff_factor=1,
+    status_forcelist=[500, 502, 503, 504]
+)
+session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
 
 # Initialize MongoDB connection
 try:
@@ -36,6 +49,12 @@ try:
 except Exception as e:
     print(f"Error connecting to MongoDB: {str(e)}")
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'healthy',
+        'nodejs_server': NODEJS_SERVER_URL
+    })
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -90,7 +109,6 @@ def register():
                     'error': f'Missing required field: {field}'
                 }), 400
         
-        
         # Hash password
         hashed_password = generate_password_hash(data['password'])
         
@@ -115,7 +133,14 @@ def register():
         
         # Get welcome message from Node.js server
         try:
-            openai_response = requests.get('${NODEJS_SERVER_URL}/api/welcome-message', timeout=5)
+            print(f"Attempting to connect to Node.js server at: {NODEJS_SERVER_URL}")
+            welcome_message_url = f'{NODEJS_SERVER_URL}/api/welcome-message'
+            print(f"Making request to: {welcome_message_url}")
+            
+            openai_response = session.get(welcome_message_url, timeout=15)
+            print(f"Response status: {openai_response.status_code}")
+            print(f"Response content: {openai_response.text}")
+            
             if openai_response.status_code == 200:
                 welcome_message = openai_response.json()['message']
             else:
