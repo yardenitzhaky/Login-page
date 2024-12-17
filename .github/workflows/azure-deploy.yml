@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
-      - name: Set up Python version
-        uses: actions/setup-python@v1
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
           
@@ -26,16 +26,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-      - name: Create startup script
-        working-directory: ./server
-        run: |
-          echo "gunicorn --bind=0.0.0.0:8000 --timeout=30 --workers=2 --threads=2 app:app" > startup.sh
-          chmod +x startup.sh
-          
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'register'  # Replace with your app name
+          app-name: 'register'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE }}
           package: './server'
