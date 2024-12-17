@@ -17,8 +17,7 @@ load_dotenv()
 # Server configuration
 NODEJS_SERVER_URL = os.getenv(
     'NODEJS_SERVER_URL', 
-    'https://chatgpt-server-a3cydtahb0habmbg.israelcentral-01.azurewebsites.net'
-).rstrip('/')  # Remove any trailing slashes
+    'https://chatgpt-server-a3cydtahb0habmbg.israelcentral-01.azurewebsites.net')  # Remove any trailing slashes
 
 # MongoDB configuration
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
@@ -131,21 +130,9 @@ def register():
                 }), 409
             raise e
         
-        # Get welcome message from Node.js server
         try:
-            print(f"Attempting to connect to Node.js server at: {NODEJS_SERVER_URL}")
-            welcome_message_url = f'{NODEJS_SERVER_URL}/api/welcome-message'
-            print(f"Making request to: {welcome_message_url}")
-            
-            openai_response = session.get(welcome_message_url, timeout=15)
-            print(f"Response status: {openai_response.status_code}")
-            print(f"Response content: {openai_response.text}")
-            
-            if openai_response.status_code == 200:
-                welcome_message = openai_response.json()['message']
-            else:
-                welcome_message = "Welcome to our platform!"
-                print(f"Error getting welcome message. Status code: {openai_response.status_code}")
+            openai_response = requests.get(f"{NODEJS_SERVER_URL}/api/welcome")
+            welcome_message = openai_response.json()['message']
         except Exception as e:
             welcome_message = "Welcome to our platform!"
             print(f"Error getting welcome message: {str(e)}")
