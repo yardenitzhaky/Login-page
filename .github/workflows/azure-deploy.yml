@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'server/**'
+      - '!server/nodejs/**'  # This excludes the nodejs directory
   workflow_dispatch:
 
 jobs:
@@ -13,29 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Python version
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.10'
-
-    - name: Install dependencies
-      working-directory: ./server
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        
-    - name: Create startup script
-      working-directory: ./server
-      run: |
-        echo "gunicorn --bind=0.0.0.0 --timeout 600 app:app" > startup.sh
-        chmod +x startup.sh
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'register'  # Replace with your app name
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE }}
-        package: './server'
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python version
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        working-directory: ./server
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Create startup script
+        working-directory: ./server
+        run: |
+          echo "gunicorn --bind=0.0.0.0 --timeout 600 app:app" > startup.sh
+          chmod +x startup.sh
+          
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'register'  # Replace with your app name
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE }}
+          package: './server'
