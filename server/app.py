@@ -122,7 +122,7 @@ def register():
             raise e
         
         try:
-            openai_response = requests.get(f"{NODEJS_SERVER_URL}/api/welcome")
+            openai_response = requests.get(f"{NODEJS_SERVER_URL}/api/welcome-message")
             welcome_message = openai_response.json()['message']
         except Exception as e:
             welcome_message = "Welcome to our platform!"
