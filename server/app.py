@@ -27,15 +27,6 @@ DB_NAME = os.getenv('DB_NAME', 'registration_db')
 app = Flask(__name__)
 CORS(app)
 
-# Configure requests session with retry logic
-session = requests.Session()
-retry_strategy = Retry(
-    total=3,
-    backoff_factor=1,
-    status_forcelist=[500, 502, 503, 504]
-)
-session.mount("https://", HTTPAdapter(max_retries=retry_strategy))
-
 # Initialize MongoDB connection
 try:
     client = MongoClient(MONGODB_URI)
