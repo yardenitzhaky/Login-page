@@ -60,3 +60,7 @@ app.get('/api/welcome-message', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+app.get('/test', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});

@@ -15,10 +15,10 @@ from requests.packages.urllib3.util.retry import Retry
 load_dotenv()
 
 # Server configuration
-NODEJS_SERVER_URL = os.getenv('NODEJS_SERVER_URL', 'https://chatgpt-server-a3cydtahb0habmbg.israelcentral-01.azurewebsites.net')
-# Ensure URL has scheme
-if not urlparse(NODEJS_SERVER_URL).scheme:
-    NODEJS_SERVER_URL = f'https://{NODEJS_SERVER_URL}'
+NODEJS_SERVER_URL = os.getenv(
+    'NODEJS_SERVER_URL', 
+    'https://chatgpt-server-a3cydtahb0habmbg.israelcentral-01.azurewebsites.net'
+).rstrip('/')  # Remove any trailing slashes
 
 # MongoDB configuration
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017')
