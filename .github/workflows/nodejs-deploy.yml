@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Nodejs/**'  # Only trigger on changes in nodejs directory
+      - 'Nodejs/**'
   workflow_dispatch:
 
 jobs:
@@ -13,21 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4  # Updated to v4
+      - uses: actions/checkout@v4
       
       - name: Set up Node.js version
-        uses: actions/setup-node@v4  # Updated to v4
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           
-      - name: npm install and build
+      - name: Install dependencies
         working-directory: ./Nodejs
-        run: |
-          npm ci
-          npm run build --if-present
+        run: npm ci
           
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4  # Updated to v4
+        uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: ./Nodejs
@@ -35,7 +33,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'chatgpt-server'  # Replace with your Azure app name
+          app-name: 'chatgpt-server'
           slot-name: 'production'
           publish-profile: ${{ secrets.AZUREWEBAPP_PUBLISHPROFILE_NODEJS }}
           package: ./Nodejs
