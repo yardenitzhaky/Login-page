@@ -115,7 +115,7 @@ def register():
         
         # Get welcome message from Node.js server
         try:
-            openai_response = requests.get(f'{NODEJS_SERVER_URL}/api/welcome-message', timeout=5)
+            openai_response = requests.get('${NODEJS_SERVER_URL}/api/welcome-message', timeout=5)
             if openai_response.status_code == 200:
                 welcome_message = openai_response.json()['message']
             else:

@@ -38,7 +38,7 @@ app.get('/api/welcome-message', async (req, res) => {
 
         const message = completion.choices[0].message.content;
         console.log('Generated welcome message:', message); // Add logging
-        res.json({ message });
+        res.status(200).json({ message });
     } catch (error) {
         console.error('OpenAI API Error:', error);
         // Return a fallback message and log the error
