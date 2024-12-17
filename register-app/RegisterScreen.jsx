@@ -19,14 +19,12 @@ const API_URL = 'https://register-hca8e4dba2eafxec.israelcentral-01.azurewebsite
 const RegisterScreen = ({ navigation }) => {
   // State for form data (username, email, password)
   const [formData, setFormData] = useState({
-    username: '',
     email: '',
     password: '',
   });
 
   // State for validation errors
   const [errors, setErrors] = useState({
-    username: '',
     email: '',
     password: '',
   });
@@ -41,19 +39,9 @@ const RegisterScreen = ({ navigation }) => {
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
-      username: '',
       email: '',
       password: '',
     };
-
-    // Validate username
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-      isValid = false;
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-      isValid = false;
-    }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -92,7 +80,12 @@ const RegisterScreen = ({ navigation }) => {
     }
 
     try {
-      setLoading(true); // Show loading indicator
+      setLoading(true);
+
+      const registrationData = {
+        ...formData,
+        username: formData.email.split('@')[0] // Extract username from email
+      };
 
       // Send registration data to the server
       const response = await fetch(`${API_URL}/api/register`, {
@@ -100,7 +93,7 @@ const RegisterScreen = ({ navigation }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(registrationData),
       });
 
       // Handle non-200 responses
@@ -163,22 +156,6 @@ const RegisterScreen = ({ navigation }) => {
 
         {/* Registration Form */}
         <View style={styles.form}>
-          {/* Username Input */}
-          <View style={styles.inputContainer}>
-            <Ionicons name="person-outline" size={20} color="#666" style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={formData.username}
-              onChangeText={(text) => {
-                setFormData({ ...formData, username: text });
-                if (errors.username) setErrors({ ...errors, username: '' });
-              }}
-              autoCapitalize="none"
-            />
-          </View>
-          {/* Display username validation error */}
-          {errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
 
           {/* Email Input */}
           <View style={styles.inputContainer}>
@@ -227,10 +204,10 @@ const RegisterScreen = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.registerButton,
-              (!formData.username || !formData.email || !formData.password || loading) &&
+              (!formData.email || !formData.password || loading) &&
                 styles.registerButtonDisabled,
             ]}
-            disabled={!formData.username || !formData.email || !formData.password || loading}
+            disabled={!formData.email || !formData.password || loading}
             onPress={handleRegister}
           >
             {loading ? (
