@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'nodejs/**'  # Only trigger on changes in nodejs directory
+      - 'Nodejs/**'  # Only trigger on changes in nodejs directory
   workflow_dispatch:
 
 jobs:
