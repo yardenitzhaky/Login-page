@@ -1,43 +1,48 @@
 import React, { useState } from 'react'
-import Card from './components/shared/Card'
-import WelcomePanel from './components/auth/WelcomePanel'
-import LoginForm from './components/auth/LoginForm'
-import LoginSuccess from './components/auth/LoginSuccess'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import WelcomePanel from './components/WelcomePanel'
+import LoginForm from './components/LoginForm'
+import LoginSuccess from './components/LoginSuccess'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loggedInUser, setLoggedInUser] = useState(null)
 
+  // Handle successful login
   const handleLoginSuccess = (user) => {
     if (user && user.username) {
-      setLoggedInUser(user);
+      setLoggedInUser(user)
     }
-  };
+  }
 
+  // Handle back action to log out the user
   const handleBack = () => {
-    setLoggedInUser(null);
-  };
+    setLoggedInUser(null)
+  }
 
   return (
     <div className="bg-[#5B5FED] text-[#333333] h-screen w-screen flex items-center justify-center">
-      <Card>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="flex" style={{ width: '1000px' }}>
           <div className="w-3/5">
+            {/* Welcome panel component */}
             <WelcomePanel />
           </div>
           <div className="w-2/5 p-6 flex flex-col justify-center overflow-auto">
             {loggedInUser ? (
-              <LoginSuccess 
-                username={loggedInUser.username} 
+              // Show login success component if user is logged in
+              <LoginSuccess
+                username={loggedInUser.username}
                 onBack={handleBack}
               />
             ) : (
+              // Show login form component if no user is logged in
               <LoginForm onLoginSuccess={handleLoginSuccess} />
             )}
-            <ToastContainer 
+            {/* Toast notifications container */}
+            <ToastContainer
               position='top-right'
-              autoClose={3000}
+              autoClose={5000}
               hideProgressBar={false}
               newestOnTop
               closeOnClick
@@ -45,7 +50,7 @@ function App() {
             />
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

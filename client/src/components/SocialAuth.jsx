@@ -1,30 +1,30 @@
 import React from 'react'
-import Button from '../shared/Button'
+import Button from './Button'
 import { Facebook, Globe } from 'lucide-react'
 
-export default function SocialAuth({ onLoginSuccess }) {
+// SocialAuth component for handling social login 
+export default function SocialAuth({ onLoginSuccess, disabled }) {
   const handleSocialLogin = () => {
-    // Simply trigger login success with a basic user object
+    // Simulate a successful login and call the onLoginSuccess callback
     onLoginSuccess({ username: 'User' })
   }
 
   return (
-    // Container for social auth buttons
     <div className="flex space-x-2">
-      {/* Google auth button */}
       <Button 
         variant="secondary" 
         className="flex-1 space-x-2"
         onClick={handleSocialLogin}
+        disabled={disabled}
       >
         <Globe className="w-5 h-5" />
         <span>Google</span>
       </Button>
-      {/* Facebook auth button */}
       <Button 
         variant="secondary" 
         className="flex-1 space-x-2"
         onClick={handleSocialLogin}
+        disabled={disabled}
       >
         <Facebook className="w-5 h-5" />
         <span>Facebook</span>
