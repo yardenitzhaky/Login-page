@@ -120,6 +120,8 @@ const RegisterScreen = ({ navigation }) => {
             }}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!loading}
+
             error={errors.email}
           />
 
@@ -138,6 +140,8 @@ const RegisterScreen = ({ navigation }) => {
             onTogglePassword={() => setShowPassword(!showPassword)}
             error={errors.password}
           />
+
+          
 
           {/* Register Button */}
           <Button
