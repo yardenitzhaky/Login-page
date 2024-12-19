@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from './styles';
 
 // CustomButton component definition
-const CustomButton = ({ title, onPress, variant = 'primary', icon, disabled, loading, style }) => (
+const Button = ({ title, onPress, variant = 'primary', icon, disabled, loading, style }) => (
   <Pressable
     // Apply styles based on variant, FOR ME: REMOVE THE OUTLINE
     style={[
@@ -42,4 +42,4 @@ const CustomButton = ({ title, onPress, variant = 'primary', icon, disabled, loa
   </Pressable>
 );
 
-export default CustomButton;
+export default Button;

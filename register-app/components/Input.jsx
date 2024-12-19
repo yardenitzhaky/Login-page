@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from './styles';
 
 // CustomInput component definition
-const CustomInput = ({ icon, error, onChangeText, ...props }) => (
+const Input = ({ icon, error, onChangeText, ...props }) => (
   <View>
     <View style={styles.inputContainer}>
       {/* Icon on the left */}
@@ -31,4 +31,4 @@ const CustomInput = ({ icon, error, onChangeText, ...props }) => (
   </View>
 );
 
-export default CustomInput;
+export default Input;

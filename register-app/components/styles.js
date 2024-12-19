@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   username: {
     fontSize: 18,
     color: '#666',
+    textAlign: 'center',
   },
   form: {
     gap: 16,
